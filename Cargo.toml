@@ -1,0 +1,41 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/dhap-core",
+    "crates/dhap-project",
+    "crates/dhap-media",
+    "crates/dhap-annotations",
+    "crates/dhap-export",
+    "crates/dhap-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["NH Prince Pradhan <nurulhudaprince18@gmail.com>", "Dhap Contributors"]
+license = "MIT"
+repository = "https://github.com/nhprince/dhap-studio"
+homepage = "https://github.com/nhprince/dhap-studio"
+readme = "README.md"
+rust-version = "1.85.0"
+
+[workspace.dependencies]
+dhap-core = { path = "crates/dhap-core", version = "0.1.0" }
+dhap-project = { path = "crates/dhap-project", version = "0.1.0" }
+dhap-media = { path = "crates/dhap-media", version = "0.1.0" }
+dhap-annotations = { path = "crates/dhap-annotations", version = "0.1.0" }
+dhap-export = { path = "crates/dhap-export", version = "0.1.0" }
+
+serde = { version = "1.0.210", features = ["derive"] }
+serde_json = "1.0.128"
+uuid = { version = "1.10.0", features = ["v4", "fast-rng", "serde"] }
+thiserror = "1.0.64"
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+tokio = { version = "1.40.0", features = ["full"] }
+clap = { version = "4.5.18", features = ["derive", "cargo"] }
+image = { version = "0.25.2", default-features = false, features = ["png", "jpeg", "webp"] }
+zip = { version = "2.2.0", default-features = false, features = ["deflate"] }
+tempfile = "3.12.0"
+chrono = { version = "0.4.38", features = ["serde"] }
+walkdir = "2.5.0"

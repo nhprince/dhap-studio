@@ -1,0 +1,21 @@
+[package]
+name = "dhap-project"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Project specification, serialization, atomic persistence, migrations, and bundle packaging for Dhap."
+
+[dependencies]
+dhap-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+zip.workspace = true
+tempfile.workspace = true
+tracing.workspace = true
+walkdir.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

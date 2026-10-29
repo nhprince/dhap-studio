@@ -1,0 +1,15 @@
+{
+  "name": "dhap-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Dhap (ধাপ) — Desktop studio for turning screen recordings into polished, editable documentation.",
+  "scripts": {
+    "studio:dev": "npm --prefix apps/studio run dev",
+    "studio:build": "npm --prefix apps/studio run build",
+    "studio:typecheck": "npm --prefix apps/studio run typecheck",
+    "test:cargo": "cargo test --workspace",
+    "fmt:cargo": "cargo fmt --all -- --check",
+    "clippy:cargo": "cargo clippy --workspace --all-targets --all-features -- -D warnings"
+  },
+  "license": "MIT"
+}

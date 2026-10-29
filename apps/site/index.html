@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dhap (ধাপ) — Desktop Studio for Illustrated Guides</title>
+  <meta name="description" content="Dhap is an open-source, local-first desktop studio that records or imports screen activity and transforms it into editable video, screenshots, and step-by-step documentation from the same project.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23e11d48'/><path d='M8 22h5v-4h5v-4h5v-4h3' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+  <style>
+    :root {
+      --bg: #090d16;
+      --bg-card: #111827;
+      --border: #1f293d;
+      --border-hover: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #e11d48;
+      --accent-hover: #f43f5e;
+      --accent-glow: rgba(225, 29, 72, 0.15);
+      --emerald: #10b981;
+      --blue: #38bdf8;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --bg-card: #ffffff;
+      --border: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #e11d48;
+      --accent-hover: #be123c;
+      --accent-glow: rgba(225, 29, 72, 0.08);
+      --emerald: #059669;
+      --blue: #0284c7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+    .brand-text { font-size: 1.25rem; font-weight: 800; }
+    .brand-bengali { color: var(--accent); font-weight: 700; margin-left: 0.25rem; }
+    nav { display: flex; align-items: center; gap: 1.5rem; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: color 0.15s; }
+    nav a:hover { color: var(--text); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); box-shadow: 0 4px 14px var(--accent-glow); }
+    .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
+    .btn-outline:hover { background: var(--border); }
+    .hero {
+      max-width: 1000px;
+      margin: 5rem auto 3rem;
+      text-align: center;
+      padding: 0 1.5rem;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 1.35rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-actions { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .features {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      font-size: 1.4rem;
+    }
+    .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .card-desc { color: var(--text-muted); font-size: 0.95rem; }
+    .preview-section {
+      max-width: 1000px;
+      margin: 6rem auto;
+      padding: 0 1.5rem;
+    }
+    .preview-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .preview-header {
+      background: #0f172a;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+    .preview-title { font-size: 0.85rem; color: #94a3b8; margin-left: 0.5rem; }
+    .preview-content { padding: 2.5rem; }
+    footer {
+      border-top: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 6rem auto 0;
+      padding: 3rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.5rem; }
+      .hero p { font-size: 1.1rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="brand">
+      <div class="brand-icon">ধ</div>
+      <div class="brand-text">Dhap <span class="brand-bengali">ধাপ</span></div>
+    </a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#architecture">Architecture</a>
+      <a href="https://github.com/nhprince/dhap-studio" target="_blank" rel="noopener">GitHub</a>
+      <button class="btn btn-outline" onclick="toggleTheme()" aria-label="Toggle theme">🌓 Theme</button>
+      <a href="#download" class="btn btn-primary">Download v0.1.0</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="badge-pill">★ Local-First Open Source Studio</div>
+      <h1>Make the steps clear.<br><span>Record once. Create the video and guide together.</span></h1>
+      <p>Transform raw screen recordings and workflow captures into editable, illustrated technical documentation, screenshots, and multi-format media without accounts, paywalls, or cloud locks.</p>
+      <div class="hero-actions">
+        <a href="#download" class="btn btn-primary">Download for Windows, macOS & Linux</a>
+        <a href="https://github.com/nhprince/dhap-studio" target="_blank" rel="noopener" class="btn btn-outline">Explore on GitHub</a>
+      </div>
+    </section>
+
+    <section class="preview-section">
+      <div class="preview-box">
+        <div class="preview-header">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+          <span class="preview-title">Dhap Studio — Workflow Editor</span>
+        </div>
+        <div class="preview-content">
+          <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">One Project, Multiple Outputs</h2>
+          <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Dhap connects the original recording, extracted timestamps, human-edited instructions, vector annotations, and irreversible privacy redactions into a single portable <code>.dhap</code> bundle.</p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 260px; background: var(--bg); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.5rem;">📄 Markdown Bundle</div>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">Standard GFM with relative asset directories, ready to commit directly to GitHub repository wikis and docs.</p>
+            </div>
+            <div style="flex: 1; min-width: 260px; background: var(--bg); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-weight: 700; color: var(--blue); margin-bottom: 0.5rem;">🌐 Standalone HTML5</div>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">Responsive single-page walkthrough with theme switching, sidebar navigation, and zero remote dependencies.</p>
+            </div>
+            <div style="flex: 1; min-width: 260px; background: var(--bg); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-weight: 700; color: var(--emerald); margin-bottom: 0.5rem;">🔒 True Privacy Redaction</div>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">Solid blackout masks permanently destroy sensitive pixels on export; raw secrets cannot be recovered.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="features">
+      <div class="card">
+        <div class="card-icon" style="background: rgba(225, 29, 72, 0.15); color: var(--accent);">🎥</div>
+        <h3 class="card-title">Non-Destructive Media Ingestion</h3>
+        <p class="card-desc">Import any MP4, WebM, MOV, or MKV. Dhap keeps the source immutable while extracting keyframes and calculating timestamps.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--emerald);">🎯</div>
+        <h3 class="card-title">Keyframe Scene Heuristics</h3>
+        <p class="card-desc">Automatically suggests candidate steps based on scene transitions and activity pauses, giving you an immediate guide draft.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background: rgba(56, 189, 248, 0.15); color: var(--blue);">✏️</div>
+        <h3 class="card-title">Vector Annotations & Badges</h3>
+        <p class="card-desc">Add numbered badges, bounding boxes, directional arrows, and highlights. All annotations remain fully editable in the project.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b);">🛡️</div>
+        <h3 class="card-title">Preflight Privacy Checklist</h3>
+        <p class="card-desc">Verify every step, broken asset link, and redaction zone before exporting. Irreversible baking destroys confidential data.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6);">📦</div>
+        <h3 class="card-title">The Portable .dhap Bundle</h3>
+        <p class="card-desc">Self-contained ZIP package holding manifest, steps, and assets. Includes schema versioning and path traversal defense.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899);">⚡</div>
+        <h3 class="card-title">Automated CLI & MCP Ready</h3>
+        <p class="card-desc">Inspect media, extract frames, and export documentation in headless CI/CD pipelines using the standalone <code>dhap</code> CLI.</p>
+      </div>
+    </section>
+
+    <section id="download" style="max-width: 800px; margin: 4rem auto; text-align: center; padding: 0 1.5rem;">
+      <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 1rem;">Ready to make your steps clear?</h2>
+      <p style="color: var(--text-muted); margin-bottom: 2rem;">Download Dhap for your platform or compile from source. 100% free and open-source under the MIT license.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="https://github.com/nhprince/dhap-studio/releases" class="btn btn-primary">Windows (x64)</a>
+        <a href="https://github.com/nhprince/dhap-studio/releases" class="btn btn-outline">macOS (Apple Silicon / Intel)</a>
+        <a href="https://github.com/nhprince/dhap-studio/releases" class="btn btn-outline">Linux (x64)</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <strong>Dhap (ধাপ)</strong> • Free & Open-Source under the MIT License.
+    </div>
+    <div>
+      Created by <a href="https://github.com/nhprince" target="_blank" rel="noopener" style="color: var(--text); font-weight: 600; text-decoration: none;">NH Prince Pradhan</a> & Dhap Contributors
+    </div>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const cur = html.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+    }
+  </script>
+</body>
+</html>

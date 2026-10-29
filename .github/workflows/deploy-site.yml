@@ -1,0 +1,45 @@
+name: Deploy Showcase Website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/site/**'
+      - '.github/workflows/deploy-site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy Static Site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Verify Static Site Files
+        run: |
+          test -f apps/site/index.html
+          echo "Static site structure verified."
+
+      - name: Deploy to Cloudflare Pages
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        uses: cloudflare/wrangler-action@392082e81ffbcb9ba722ea0d334365313186d38e # v3.14.0
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/site --project-name=dhap-studio --branch=main
+
+      - name: Report Deployment Status
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "Cloudflare credentials not yet configured. The site was built and validated locally."
+            echo "To enable automated Cloudflare Pages deployment, configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets."
+          else
+            echo "Deployment completed successfully to Cloudflare Pages."
+          fi

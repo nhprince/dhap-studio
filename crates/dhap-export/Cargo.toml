@@ -1,0 +1,22 @@
+[package]
+name = "dhap-export"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Multi-format documentation exporters (Markdown, standalone responsive HTML5) and preflight validation for Dhap."
+
+[dependencies]
+dhap-core.workspace = true
+dhap-project.workspace = true
+dhap-annotations.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+image.workspace = true
+tempfile.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+dhap-media.workspace = true

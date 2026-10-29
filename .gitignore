@@ -1,0 +1,36 @@
+# Rust build artifacts
+target/
+**/*.rs.bk
+*.pdb
+
+# Node / Frontend build artifacts
+node_modules/
+dist/
+dist-docs/
+.vite/
+*.tsbuildinfo
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Dhap temporary files & exports
+*.tmp
+*.temp
+/test-output/
+/scratch/
+fixtures/output/
+
+# Environment secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
